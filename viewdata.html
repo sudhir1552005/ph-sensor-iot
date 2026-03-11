@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<title>Smart Agro Live Monitoring</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+font-family:Poppins;
+background:#f4f7fb;
+margin:0;
+text-align:center;
+}
+
+header{
+background:#0d6efd;
+color:white;
+padding:20px;
+}
+
+.container{
+display:flex;
+justify-content:center;
+gap:30px;
+margin-top:60px;
+flex-wrap:wrap;
+}
+
+.card{
+background:white;
+padding:30px;
+width:250px;
+border-radius:12px;
+box-shadow:0 6px 20px rgba(0,0,0,0.1);
+}
+
+.card h2{
+margin-bottom:15px;
+}
+
+.value{
+font-size:40px;
+font-weight:600;
+color:#0d6efd;
+}
+
+.timestamp{
+margin-top:20px;
+color:#666;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h1>🌿 Smart Agro Live Monitoring</h1>
+</header>
+
+<main class="container">
+
+<div class="card">
+<h2>🧪 pH Level</h2>
+<div class="value" id="ph">--</div>
+</div>
+
+<div class="card">
+<h2>💧 Turbidity</h2>
+<div class="value" id="turbidity">--</div>
+</div>
+
+<div class="card">
+<h2>🌱 Soil Moisture</h2>
+<div class="value" id="soil">--</div>
+</div>
+
+</main>
+
+<p class="timestamp">
+Last Updated: <span id="time">--</span>
+</p>
+
+<script>
+
+const API_ROOT =
+window.location.hostname === "localhost"
+? "http://localhost:8080/sensors"
+: "https://polyhouse-qqiy.onrender.com/sensors";
+
+async function loadData(){
+
+const res = await fetch(`${API_ROOT}/latest`);
+if(!res.ok) return;
+
+const d = await res.json();
+
+document.getElementById("ph").textContent = d.ph ?? "--";
+document.getElementById("turbidity").textContent = d.turbidity ?? "--";
+document.getElementById("soil").textContent = d.soil_moisture ?? "--";
+document.getElementById("time").textContent = d.timestamp ?? "--";
+
+}
+
+loadData();
+setInterval(loadData,5000);
+
+</script>
+
+</body>
+</html>
